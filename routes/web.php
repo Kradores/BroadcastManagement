@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+Route::get('/', "PagesController@index");
+Route::get('/settings/notif', "PagesController@notif");
+Route::get('/settings/test', "PagesController@test");
+Route::get('/settings/list', "PagesController@list");
+Route::get('/settings/status', "PagesController@status");
