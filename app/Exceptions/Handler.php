@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception instanceof ThrottleRequestsException) {
+            $retryAfter = ($exception->getHeaders())["Retry-After"];
+            return back()->with('notice', "Relax, take a deep breath!");
+        }
         return parent::render($request, $exception);
     }
 }

@@ -41,6 +41,10 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
         ],
+
+        'db_request_limit' => [
+            'throttle:1,0.05',
+        ],
     ];
 
     /**

@@ -12,7 +12,11 @@
 */
 
 Route::get('/', "PagesController@index");
-Route::get('/settings/notif', "PagesController@notif");
 Route::get('/settings/test', "PagesController@test");
 Route::get('/settings/list', "PagesController@list");
 Route::get('/settings/status', "PagesController@status");
+
+
+Route::get('/settings/notif', 'NotificationsController@index');
+Route::put('/settings/notif/{id}', 'NotificationsController@update')->middleware('db_request_limit');
+
