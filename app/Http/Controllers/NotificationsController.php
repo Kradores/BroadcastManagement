@@ -75,7 +75,6 @@ class NotificationsController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $notif = Notification::find($id);
         if($notif->notif_text === $request->input('notif_text')) {
             return back()->with('notice', "Sorry, I will not update current text with same text!");

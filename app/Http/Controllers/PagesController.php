@@ -11,14 +11,6 @@ class PagesController extends Controller
         return view("dashboard");
     }
 
-    public function notif() {
-        return view("pages.notif");
-    }
-
-    public function test() {
-        return view("pages.test");
-    }
-
     public function list() {
         return view("pages.list");
     }
