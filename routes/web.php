@@ -12,7 +12,6 @@
 */
 
 Route::get('/', "PagesController@index");
-Route::get('/settings/list', "PagesController@list");
 Route::get('/settings/status', "PagesController@status");
 
 
@@ -23,4 +22,7 @@ Route::get('/settings/test', "TestsController@index");
 Route::post('/settings/test', "TestsController@send")->middleware('db_request_limit');
 Route::put('/settings/test', "TestsController@show")->middleware('db_request_limit');
 Route::get('/settings/test/{id}', "TestsController@refresh")->middleware('db_request_limit');
+
+Route::get('/settings/list', "ListsController@index");
+Route::post('/settings/list', "ListsController@update");
 

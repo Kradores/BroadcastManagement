@@ -11,10 +11,6 @@ class PagesController extends Controller
         return view("dashboard");
     }
 
-    public function list() {
-        return view("pages.list");
-    }
-
     public function status() {
         return view("pages.status");
     }
