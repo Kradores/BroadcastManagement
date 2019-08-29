@@ -26,3 +26,8 @@ Route::get('/settings/test/{id}', "TestsController@refresh")->middleware('db_req
 Route::get('/settings/list', "ListsController@index");
 Route::post('/settings/list', "ListsController@update");
 
+Route::get('/settings/status', "StatusController@index");
+Route::get('/settings/status/start', "StatusController@start");
+Route::get('/settings/status/stop', "StatusController@stop");
+Route::get('/settings/status/current', "StatusController@getCurrentStatus");
+

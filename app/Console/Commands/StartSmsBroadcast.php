@@ -11,7 +11,7 @@ class StartSmsBroadcast extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'exec:start';
 
     /**
      * The console command description.
@@ -37,6 +37,7 @@ class StartSmsBroadcast extends Command
      */
     public function handle()
     {
-        //
+        exec("echo Broadcaster Started Successfully", $result);
+        $this->line($result[0]);
     }
 }

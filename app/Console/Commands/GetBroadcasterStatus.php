@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class StopSmsBroadcast extends Command
+class GetBroadcasterStatus extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'exec:stop';
+    protected $signature = 'exec:status';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Executes a script that will kill broadcast.php by PID';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -37,7 +37,7 @@ class StopSmsBroadcast extends Command
      */
     public function handle()
     {
-        exec("echo Broadcaster Stopped Successfully", $result);
+        exec("echo Broadcaster is Active", $result);
         $this->line($result[0]);
     }
 }
