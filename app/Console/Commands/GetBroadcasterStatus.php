@@ -37,7 +37,8 @@ class GetBroadcasterStatus extends Command
      */
     public function handle()
     {
-        exec("echo Broadcaster is Active", $result);
+        // ps aux | grep /SCRIPTS/USSD_DATING/awcc_af/crontab_scripts/broadcast.php | grep -v grep | grep -v '/bin/sh -c' | awk '{print "{\"start\":\"" $9"\",","\"duration\":\"" $10"\"}"}'
+        exec('echo {"start":"11:00" , "duration":"1:09"}', $result);
         $this->line($result[0]);
     }
 }

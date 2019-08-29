@@ -39,6 +39,6 @@ class GetSmsBroadcastStatus extends Command
     {
         $smpp = $this->argument('link');
         exec("echo 'smpp $smpp'", $result);
-        echo json_encode($result);
+        $this->line($result[0]);
     }
 }

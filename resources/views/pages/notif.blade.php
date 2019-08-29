@@ -6,7 +6,6 @@
 
 @section('content')
     @foreach ($notifs as $notif)
-
         @if ($notif->notif_marker == 'broadcast_notif_test')
             <div class="row">
                 <div class="col-lg-12">

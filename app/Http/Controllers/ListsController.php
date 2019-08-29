@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BroadcastList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -28,8 +29,9 @@ class ListsController extends Controller
         $this->insert($path);
 
         Storage::disk('public')->delete($listsDir.'/'.basename($path));
-        
-        return back()->with('success', "Broadcast List Successfuly Updated");
+
+        //return back()->with('success', "Broadcast List Successfully Updated");
+        return response()->json(['success' => "Broadcast List Successfully Updated"]);
     }
 
     private function uploadFile(Request $request, $listsDir) {
@@ -56,7 +58,39 @@ class ListsController extends Controller
     }
 
     private function truncate() {
-        $query = "TRUNCATE TABLE ListaToBroadcast;";
-        DB::connection()->getPdo()->exec($query);
+        DB::table('ListaToBroadcast')->truncate();
+    }
+
+    public function prepareList(Request $request) {
+
+        $this->validate($request, [
+            'msisdn' => 'required|digits:11',
+        ]);
+
+        $connection = DB::connection();
+
+        $beforeCleaning = $connection->table("ListaToBroadcast")->count('id');
+
+        $call = "CALL ForBroadcasting(".$request->input('msisdn').");";
+        $connection->getPdo()->exec($call);
+
+        $delete = "DELETE FROM ListaToBroadcast WHERE id IN 
+                    (
+                        SELECT id FROM 
+                        (SELECT MAX(id) id, count(*) cnt FROM ListaToBroadcast GROUP BY msisdn HAVING cnt > 1) t0
+                    );";
+        $connection->select(DB::raw($delete));
+
+        $afterCleaning = $connection->table("ListaToBroadcast")->count('id');
+
+        $data = [
+            'rows' => ['before' => $beforeCleaning,
+                'after' => $afterCleaning,
+            ],
+            'success' => 'Broadcast List Successfully Updated'
+        ];
+
+        return back()->with($data);
+        
     }
 }

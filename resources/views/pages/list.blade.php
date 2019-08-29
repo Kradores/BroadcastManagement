@@ -5,6 +5,11 @@
 @endsection
 
 @section('content')
+    <style>
+        .progress { position:relative; width:100%; border: 1px solid #7F98B2; padding: 1px; border-radius: 3px; height:25px;}
+        .bar { background-color: #B4F5B4; width:0%; height:25px; border-radius: 3px; }
+        .percent { position:absolute; display:inline-block; top:3px; left:48%; color: #7F98B2;}
+    </style>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -27,6 +32,11 @@
                             <label class="col-sm-2 col-form-label">File:</label>
                             <div class="col-sm-10">
                                 <input type="file" class="form-control-file" name="list">
+                                <br>
+                                <div class="progress">
+                                    <div class="bar"></div >
+                                    <div class="percent">0%</div >
+                                </div>
                             </div>
                         </div>
                         <hr>
@@ -36,6 +46,49 @@
                     </form>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Prepare List</h5>
+                    <hr>
+                    <form method="POST" action="/settings/list/prepare" class="mr-2 col">
+                        @csrf
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Test Msisdn:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" name="msisdn">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Prepare List</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+    @if ($rows = session('rows'))
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Preparation Result</h5>
+                <hr>
+                <form>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Rows Before Clean Up:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="before" value="{{$rows['before']}}" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Rows After Clean Up:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" name="after" value="{{$rows['after']}}" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
 @endsection
+

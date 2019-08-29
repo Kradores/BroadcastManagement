@@ -51,7 +51,7 @@
     </div>
 </div>
 
-@if ($sms = session('sms')[0])
+@if ($sms = session('sms'))
     <div class="row">
         <div class="col-lg-12">
             <div class="card">

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
 class StatusController extends Controller
 {
@@ -28,6 +26,12 @@ class StatusController extends Controller
     public function getCurrentStatus() {
         Artisan::call('exec:status');
         $result = Artisan::output();
-        return back()->with('success', $result);
+        $result = json_decode($result, true);
+        $data = [
+            'success' => 'Broadcast Script is Active',
+            'start' => $result['start'],
+            'duration' => $result['duration']
+        ];
+        return back()->with($data);
     }
 }
