@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Event;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Events\UpdateBroadcastListEvent;
+use App\Listeners\DeleteFileListener;
+use App\Listeners\DeleteListFileListener;
+use App\Listeners\ListToDbListener;
+use App\Listeners\UploadFileListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -15,8 +17,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
+        UpdateBroadcastListEvent::class => [
+            ListToDbListener::class,
+            DeleteFileListener::class,
         ],
     ];
 

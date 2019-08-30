@@ -5,11 +5,6 @@
 @endsection
 
 @section('content')
-    <style>
-        .progress { position:relative; width:100%; border: 1px solid #7F98B2; padding: 1px; border-radius: 3px; height:25px;}
-        .bar { background-color: #B4F5B4; width:0%; height:25px; border-radius: 3px; }
-        .percent { position:absolute; display:inline-block; top:3px; left:48%; color: #7F98B2;}
-    </style>
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
@@ -32,11 +27,6 @@
                             <label class="col-sm-2 col-form-label">File:</label>
                             <div class="col-sm-10">
                                 <input type="file" class="form-control-file" name="list">
-                                <br>
-                                <div class="progress">
-                                    <div class="bar"></div >
-                                    <div class="percent">0%</div >
-                                </div>
                             </div>
                         </div>
                         <hr>

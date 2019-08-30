@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\BroadcastList;
+use App\Events\UpdateBroadcastListEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Translation\FileLoader;
+use Symfony\Component\Translation\Loader\CsvFileLoader;
 
 class ListsController extends Controller
 {
@@ -17,48 +20,21 @@ class ListsController extends Controller
 
         $this->validate($request, [
             'action' => 'required',
-            'list' => 'required|mimes:csv,txt|max:499999', // 500MB
+            'list' => 'required|file|mimes:csv,txt|max:499999', // 500MB
         ]);
-        
-        $listsDir = 'lists';
-        $path = $this->uploadFile($request, $listsDir);
 
-        if($request->input('action') == 'new') {
-            $this->truncate();
-        }
-        $this->insert($path);
+        $folder = 'lists';
+        $path = $this->uploadFile($request, $folder);
 
-        Storage::disk('public')->delete($listsDir.'/'.basename($path));
+        $list = new BroadcastList();
+        // $csv = new FileLoader();
 
-        //return back()->with('success', "Broadcast List Successfully Updated");
-        return response()->json(['success' => "Broadcast List Successfully Updated"]);
-    }
 
-    private function uploadFile(Request $request, $listsDir) {
+        //event(new UpdateBroadcastListEvent($request->input('action'), $path, $folder));
 
-        // Get extension
-        $extension = "csv";
+        // Storage::disk('public')->delete($folder.'/'.basename($path));
 
-        // Create new filename
-        $filenameToStore = 'broadcast_list_'.time().'.'.$extension;
-
-        // Upload image
-        // $path = $request->file('list')->storeAs('public/broadcast_list', $filenameToStore);
-
-        // Manually specify a file name...
-        Storage::putFileAs('public/'.$listsDir, $request->file('list'), $filenameToStore);
-        $link = 'storage/'.$listsDir.'/'.$filenameToStore;
-
-        return $link;
-    }
-
-    private function insert($path) {
-        $query = "LOAD DATA LOCAL INFILE '$path' INTO TABLE ListaToBroadcast FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES (@col1) SET msisdn=@col1;";
-        DB::connection()->getPdo()->exec($query);
-    }
-
-    private function truncate() {
-        DB::table('ListaToBroadcast')->truncate();
+        return back()->with('success', "Broadcast List Successfully Updated");
     }
 
     public function prepareList(Request $request) {
@@ -69,17 +45,25 @@ class ListsController extends Controller
 
         $connection = DB::connection();
 
+        $delete = "DELETE FROM ListaToBroadcast WHERE id IN 
+                    (
+                        SELECT id FROM 
+                        (
+                            SELECT t1.id id FROM ListaToBroadcast t1
+                            INNER JOIN
+                            (
+                                SELECT MAX(id) id, msisdn FROM ListaToBroadcast GROUP BY msisdn
+                            ) t0
+                            ON 
+                            t1.id <> t0.id AND t1.msisdn = t0.msisdn
+                        ) t10
+                    );";
+        $connection->select(DB::raw($delete));
+
         $beforeCleaning = $connection->table("ListaToBroadcast")->count('id');
 
         $call = "CALL ForBroadcasting(".$request->input('msisdn').");";
         $connection->getPdo()->exec($call);
-
-        $delete = "DELETE FROM ListaToBroadcast WHERE id IN 
-                    (
-                        SELECT id FROM 
-                        (SELECT MAX(id) id, count(*) cnt FROM ListaToBroadcast GROUP BY msisdn HAVING cnt > 1) t0
-                    );";
-        $connection->select(DB::raw($delete));
 
         $afterCleaning = $connection->table("ListaToBroadcast")->count('id');
 
@@ -92,5 +76,14 @@ class ListsController extends Controller
 
         return back()->with($data);
         
+    }
+
+    private function uploadFile(Request $request, $folder) {
+        // Create new filename
+        $filenameToStore = 'broadcast_list_'.time().'.csv';
+
+        // Manually specify a file name...
+        Storage::putFileAs('public/'.$folder, $request->file('list'), $filenameToStore);
+        return 'storage/'.$folder.'/'.$filenameToStore;
     }
 }
