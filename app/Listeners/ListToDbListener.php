@@ -22,10 +22,12 @@ class ListToDbListener implements ShouldQueue
             DB::table('ListaToBroadcast')->truncate();
         }
 
-        $list = new BroadcastList();
-        $csv = new CsvFileLoader();
-        $csv->loadResource($event->path);
-        // $query = "LOAD DATA LOCAL INFILE '$event->path' INTO TABLE ListaToBroadcast FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES (@col1) SET msisdn=@col1;";
-        // DB::connection()->getPdo()->exec($query);
+        $query = "LOAD DATA LOCAL INFILE '$event->path' INTO TABLE ListaToBroadcast FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES (@col1) SET msisdn=@col1;";
+        DB::getPdo()->exec($query);
+    }
+
+    public function failed()
+    {
+        
     }
 }

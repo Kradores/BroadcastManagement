@@ -7,7 +7,6 @@ use App\Events\UpdateBroadcastListEvent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Translation\FileLoader;
 use Symfony\Component\Translation\Loader\CsvFileLoader;
 
 class ListsController extends Controller
@@ -26,13 +25,7 @@ class ListsController extends Controller
         $folder = 'lists';
         $path = $this->uploadFile($request, $folder);
 
-        $list = new BroadcastList();
-        // $csv = new FileLoader();
-
-
-        //event(new UpdateBroadcastListEvent($request->input('action'), $path, $folder));
-
-        // Storage::disk('public')->delete($folder.'/'.basename($path));
+        event(new UpdateBroadcastListEvent($request->input('action'), $path, $folder));
 
         return back()->with('success', "Broadcast List Successfully Updated");
     }
@@ -83,7 +76,9 @@ class ListsController extends Controller
         $filenameToStore = 'broadcast_list_'.time().'.csv';
 
         // Manually specify a file name...
-        Storage::putFileAs('public/'.$folder, $request->file('list'), $filenameToStore);
-        return 'storage/'.$folder.'/'.$filenameToStore;
+        Storage::putFileAs($folder, $request->file('list'), $filenameToStore);
+        $path = Storage::disk('local')->path($folder.'/'.$filenameToStore);
+        $winPath = str_replace("\\", "/", $path);
+        return $winPath;
     }
 }

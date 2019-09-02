@@ -8,4 +8,6 @@ class BroadcastList extends Model
 {
     protected $table = 'ListaToBroadcast';
     public $timestamps = false;
+
+    protected $fillable = ['msisdn'];
 }
