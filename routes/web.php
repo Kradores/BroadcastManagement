@@ -32,3 +32,14 @@ Route::get('/settings/status/start', "StatusController@start");
 Route::get('/settings/status/stop', "StatusController@stop");
 Route::get('/settings/status/current', "StatusController@getCurrentStatus");
 
+
+// Route::any('/tus/{any?}', function () {
+//     $response = app('tus-server')->serve();
+
+//     return $response->send();
+// })->where('any', '.*');
+
+Route::any('/tus', "TusController@server");
+Route::get('/upload', "TusController@index");
+Route::post('/upload', "TusController@client");
+

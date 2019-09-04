@@ -3,7 +3,6 @@
 namespace App\Listeners;
 
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DeleteFileListener implements ShouldQueue
@@ -27,7 +26,7 @@ class DeleteFileListener implements ShouldQueue
      */
     public function handle($event)
     {
-        Storage::disk('public')->delete($event->folder.'/'.basename($event->path));
+        Storage::disk('local')->delete($event->folder.'/'.basename($event->path));
     }
     
 }

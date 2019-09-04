@@ -2,11 +2,8 @@
 
 namespace App\Listeners;
 
-use App\BroadcastList;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Symfony\Component\Translation\Loader\CsvFileLoader;
 
 class ListToDbListener implements ShouldQueue
 {
