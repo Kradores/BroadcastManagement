@@ -11,7 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
-mix
+mix.react('resources/js/app.js', 'public/js')
    .sass('resources/sass/app.scss', 'public/css')
    .styles([
     'public/css/app.css',
@@ -19,7 +19,8 @@ mix
     'vendor/almasaeed2010/adminlte/plugins/fontawesome-free/css/all.css'
     ], 'public/css/all.css')
     .scripts([
+        'public/js/app.js',
         'vendor/almasaeed2010/adminlte/plugins/jquery/jquery.js',
         'vendor/almasaeed2010/adminlte/plugins/bootstrap/js/bootstrap.bundle.js',
-        'vendor/almasaeed2010/adminlte/dist/js/adminlte.js'
+        'vendor/almasaeed2010/adminlte/dist/js/adminlte.js',
     ], 'public/js/all.js');

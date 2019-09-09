@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Events\UpdateBroadcastListEvent;
+use App\Events\UploadEvent;
 use App\Listeners\DeleteFileListener;
 use App\Listeners\ListToDbListener;
+use App\Listeners\UploadListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider

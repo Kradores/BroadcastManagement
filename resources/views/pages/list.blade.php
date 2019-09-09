@@ -5,14 +5,15 @@
 @endsection
 
 @section('content')
+
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Update Broadcast List</h5>
                     <hr>
-                    <form method="POST" action="/settings/list" enctype="multipart/form-data">
-                        @csrf
+                    <form>
+                        
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Action Type:</label>
                             <div class="col-sm-10">
@@ -24,15 +25,22 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">File:</label>
-                            <div class="col-sm-10">
-                                <input type="file" class="form-control-file" name="list">
+                            <div class="col-sm-2">
+                                {!! Plupload::make([
+                                    'url' => '/upload',
+                                    'chunk_size' => '1000kb',
+                                    'multi_selection' => false,
+                                    ]) 
+                                !!}
                             </div>
+                            <div class="col-sm-10">
+                                <div class="progress" style="height: 38px;">
+                                    <div id="upload-progress" class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                            
                         </div>
-                        <hr>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Start</button>
-                        </div>
+                        
                     </form>
                 </div>
             </div>
@@ -80,5 +88,8 @@
             </div>
         </div>
     @endif
+    <script language="javascript">
+
+    </script>
 @endsection
 

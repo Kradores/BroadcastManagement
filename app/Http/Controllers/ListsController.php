@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\UpdateBroadcastListEvent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Events\UploadFileEvent;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Events\UpdateBroadcastListEvent;
+use App\Events\UploadEvent;
+use JildertMiedema\LaravelPlupload\Facades\Plupload;
 
 class ListsController extends Controller
 {
@@ -17,7 +21,7 @@ class ListsController extends Controller
 
         $this->validate($request, [
             'action' => 'required',
-            'list' => 'required|file|mimes:csv,txt|max:499999', // 500MB
+            'file' => 'required|file|mimes:csv,txt|max:499999', // 500MB
         ]);
 
         $folder = 'lists';
@@ -78,5 +82,46 @@ class ListsController extends Controller
         $path = Storage::disk('local')->path($folder.'/'.$filenameToStore);
         $winPath = str_replace("\\", "/", $path);
         return $winPath;
+    }
+
+    public function upload(Request $request) {
+
+        $chunk = $request->chunk;
+        $chunks = $request->chunks;
+        $file = $_FILES['file'];
+        $filePathPartial = storage_path() . "/plupload/". "broadcast_list.csv.part";
+        $filePathComplete = storage_path() . "/app/lists/". "broadcast_list.csv";
+
+        // check if there is any unfinished upload
+        if($chunk == 0 && $chunks > 1 && file_exists($filePathPartial)) {
+            unlink($filePathPartial);
+        }
+
+        $this->appendData($filePathPartial, $file);
+
+        if($chunk == $chunks - 1) {
+            rename($filePathPartial, $filePathComplete);
+        }
+
+        $percentage = round(($chunk+1)/$chunks * 100, 2);
+
+        event(new UploadEvent($percentage));
+    }
+
+    private function appendData($filePathPartial, $file)
+    {
+        if (!$out = @fopen($filePathPartial, 'ab')) {
+            //throw new PluploadException('Failed to open output stream.', 102);
+        }
+
+        if (!$in = @fopen($file['tmp_name'], 'rb')) {
+            //throw new PluploadException('Failed to open input stream', 101);
+        }
+        while ($buff = fread($in, 4096)) {
+            fwrite($out, $buff);
+        }
+
+        @fclose($out);
+        @fclose($in);
     }
 }

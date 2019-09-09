@@ -11,6 +11,8 @@
 |
 */
 
+use App\Events\UploadEvent;
+
 Route::get('/', "PagesController@index");
 Route::get('/settings/status', "PagesController@status");
 
@@ -33,13 +35,12 @@ Route::get('/settings/status/stop', "StatusController@stop");
 Route::get('/settings/status/current', "StatusController@getCurrentStatus");
 
 
-// Route::any('/tus/{any?}', function () {
-//     $response = app('tus-server')->serve();
+Route::post('/upload', "ListsController@upload");
 
-//     return $response->send();
-// })->where('any', '.*');
+Route::get('/test', function(){
+    return view('pages.listener');
+});
 
-Route::any('/tus', "TusController@server");
-Route::get('/upload', "TusController@index");
-Route::post('/upload', "TusController@client");
-
+Route::get('/fire', function() {
+ event(new UploadEvent('Test Text'));
+});
