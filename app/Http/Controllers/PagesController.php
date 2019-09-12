@@ -11,7 +11,5 @@ class PagesController extends Controller
         return view("dashboard");
     }
 
-    public function status() {
-        return view("pages.status");
-    }
+    
 }

@@ -84,13 +84,24 @@ class ListsController extends Controller
         return $winPath;
     }
 
+    private function getPath($folder) {
+        // Create new filename
+        $filenameToStore = 'broadcast_list.csv';
+
+        // Manually specify a file name...
+        $path = Storage::disk('local')->path($folder.'/'.$filenameToStore);
+        $winPath = str_replace("\\", "/", $path);
+        return $winPath;
+    }
+
     public function upload(Request $request) {
 
         $chunk = $request->chunk;
         $chunks = $request->chunks;
         $file = $_FILES['file'];
-        $filePathPartial = storage_path() . "/plupload/". "broadcast_list.csv.part";
-        $filePathComplete = storage_path() . "/app/lists/". "broadcast_list.csv";
+        $folder = 'lists';
+        $filePathPartial = storage_path() . "/plupload/broadcast_list.csv.part";
+        $filePathComplete = storage_path() . "/app/{$folder}/broadcast_list.csv";
 
         // check if there is any unfinished upload
         if($chunk == 0 && $chunks > 1 && file_exists($filePathPartial)) {
@@ -101,6 +112,9 @@ class ListsController extends Controller
 
         if($chunk == $chunks - 1) {
             rename($filePathPartial, $filePathComplete);
+            
+            $path = $this->getPath($folder);
+            event(new UpdateBroadcastListEvent($request->header('action'), $path, $folder));
         }
 
         $percentage = round(($chunk+1)/$chunks * 100, 2);
@@ -111,11 +125,11 @@ class ListsController extends Controller
     private function appendData($filePathPartial, $file)
     {
         if (!$out = @fopen($filePathPartial, 'ab')) {
-            //throw new PluploadException('Failed to open output stream.', 102);
+            return back()->with('error', "Broadcast List Upload Failed, couldn't write to part file");
         }
 
         if (!$in = @fopen($file['tmp_name'], 'rb')) {
-            //throw new PluploadException('Failed to open input stream', 101);
+            return back()->with('error', "Broadcast List Upload Failed, couldn't read tmp file");
         }
         while ($buff = fread($in, 4096)) {
             fwrite($out, $buff);

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 @section('header')
     Broadcast List
@@ -13,23 +13,13 @@
                     <h5 class="card-title">Update Broadcast List</h5>
                     <hr>
                     <form>
-                        
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Action Type:</label>
-                            <div class="col-sm-10">
-                                <select name="action" class="form-control">
-                                    <option value="" selected disabled>Select Action</option>
-                                    <option value="new">New Broadcast List</option>
-                                    <option value="add">Add To Current List</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="form-group row">
                             <div class="col-sm-2">
                                 {!! Plupload::make([
                                     'url' => '/upload',
                                     'chunk_size' => '1000kb',
                                     'multi_selection' => false,
+                                    'headers' => ['action' => 'new'],
                                     ]) 
                                 !!}
                             </div>
@@ -88,8 +78,5 @@
             </div>
         </div>
     @endif
-    <script language="javascript">
-
-    </script>
 @endsection
 
