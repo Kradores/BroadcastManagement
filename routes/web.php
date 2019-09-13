@@ -11,8 +11,6 @@
 |
 */
 
-use App\Events\UploadEvent;
-
 Route::get('/', "PagesController@index");
 
 

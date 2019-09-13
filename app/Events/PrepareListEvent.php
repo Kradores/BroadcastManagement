@@ -10,19 +10,18 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NotificationUpdatedEvent
+class PrepareListEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $notif;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($notif)
+    public function __construct()
     {
-        $this->notif = $notif;
+        //
     }
 
     /**

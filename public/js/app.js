@@ -70820,14 +70820,26 @@ __webpack_require__(/*! ./components/Example */ "./resources/js/components/Examp
 
 var Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
+Vue.prototype.$userId = document.querySelector("div[name='current-user-id']").getAttribute('content');
 new Vue({
   el: '#upload-progress',
   created: function created() {
-    Echo.channel('broadcast-channel').listen('UploadEvent', function (e) {
+    Echo.channel('channel-broadcast').listen('UploadEvent', function (e) {
       var bar = document.getElementById("upload-progress");
       bar.setAttribute("aria-valuenow", e.message);
       bar.setAttribute("style", "width: " + e.message + "%;");
       bar.innerText = e.message + "%";
+    });
+  }
+});
+new Vue({
+  el: '#notification',
+  created: function created() {
+    Echo["private"]('App.User.' + this.$userId).notification(function (notification) {
+      var template = document.getElementById("notification");
+      template.removeAttribute("hidden");
+      template.classList.add(notification.alertType);
+      template.innerHTML = notification.message + template.innerHTML;
     });
   }
 });

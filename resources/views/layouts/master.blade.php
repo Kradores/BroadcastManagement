@@ -44,21 +44,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div>
     <!-- /.content-header -->
 
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
             @include('inc.messages')
+            @include('inc.notifications')
             @yield('content')
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </div>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
 
   @include('inc.footer')
 </div>
-<!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
 

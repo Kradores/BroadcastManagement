@@ -6,4 +6,5 @@
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; 2019 <a href="https://broadcaster.test">Broadcaster</a>.</strong> All rights reserved.
-  </footer>
+</footer>
+<div id="upload-progress" hidden></div>

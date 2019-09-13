@@ -33,6 +33,6 @@ class UploadEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('broadcast-channel');
+        return new Channel('channel-broadcast');
     }
 }

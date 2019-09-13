@@ -2,34 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UploadEvent;
 use Illuminate\Http\Request;
-use App\Events\UploadFileEvent;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Events\UpdateBroadcastListEvent;
-use App\Events\UploadEvent;
-use JildertMiedema\LaravelPlupload\Facades\Plupload;
+use App\Notifications\GeneralNotification;
 
 class ListsController extends Controller
 {
     public function index() {
         return view("pages.list");
-    }
-
-    public function update(Request $request) {
-
-        $this->validate($request, [
-            'action' => 'required',
-            'file' => 'required|file|mimes:csv,txt|max:499999', // 500MB
-        ]);
-
-        $folder = 'lists';
-        $path = $this->uploadFile($request, $folder);
-
-        event(new UpdateBroadcastListEvent($request->input('action'), $path, $folder));
-
-        return back()->with('success', "Broadcast List Successfully Updated");
     }
 
     public function prepareList(Request $request) {
@@ -73,17 +57,6 @@ class ListsController extends Controller
         
     }
 
-    private function uploadFile(Request $request, $folder) {
-        // Create new filename
-        $filenameToStore = 'broadcast_list_'.time().'.csv';
-
-        // Manually specify a file name...
-        Storage::putFileAs($folder, $request->file('list'), $filenameToStore);
-        $path = Storage::disk('local')->path($folder.'/'.$filenameToStore);
-        $winPath = str_replace("\\", "/", $path);
-        return $winPath;
-    }
-
     private function getPath($folder) {
         // Create new filename
         $filenameToStore = 'broadcast_list.csv';
@@ -115,6 +88,9 @@ class ListsController extends Controller
             
             $path = $this->getPath($folder);
             event(new UpdateBroadcastListEvent($request->header('action'), $path, $folder));
+
+            $user = Auth::user();
+            $user->notify(new GeneralNotification('success', 'Broadcast List Successfully Updated'));
         }
 
         $percentage = round(($chunk+1)/$chunks * 100, 2);
