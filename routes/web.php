@@ -35,5 +35,3 @@ Route::get('/settings/status/current', "StatusController@getCurrentStatus");
 Route::post('/upload', "ListsController@upload");
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
