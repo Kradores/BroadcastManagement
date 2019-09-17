@@ -15,6 +15,10 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('Notification', function() {
-    return true;
+Broadcast::channel('Upload.Progress.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('Count.Broadcast.List.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
 });

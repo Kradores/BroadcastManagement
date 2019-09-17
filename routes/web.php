@@ -24,7 +24,7 @@ Route::get('/settings/test/{id}', "TestsController@refresh")->middleware('db_req
 
 Route::get('/settings/list', "ListsController@index")->middleware('auth');
 Route::post('/settings/list', "ListsController@update");
-Route::post('/settings/list/prepare', "ListsController@prepareList")->middleware('db_request_limit');
+Route::put('/settings/list', "ListsController@prepareList")->middleware('db_request_limit');
 
 Route::get('/settings/status', "StatusController@index");
 Route::get('/settings/status/start', "StatusController@start");

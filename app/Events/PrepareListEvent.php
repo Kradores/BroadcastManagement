@@ -14,23 +14,17 @@ class PrepareListEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $msisdn;
+    public $userId;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($msisdn, $userId)
     {
-        //
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
+        $this->msisdn = $msisdn;
+        $this->userId = $userId;
     }
 }

@@ -39,7 +39,8 @@
                 <div class="card-body">
                     <h5 class="card-title">Prepare List</h5>
                     <hr>
-                    <form method="POST" action="/settings/list/prepare" class="mr-2 col">
+                    <form method="POST" action="/settings/list" class="mr-2 col">
+                        @method("PUT")
                         @csrf
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Test Msisdn:</label>
@@ -49,34 +50,33 @@
                         </div>
                         <hr>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Prepare List</button>
+                            <button id="prepare-button" type="submit" class="btn btn-primary">Prepare List</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    @if ($rows = session('rows'))
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Preparation Result</h5>
-                <hr>
-                <form>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Rows Before Clean Up:</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" name="before" value="{{$rows['before']}}" readonly>
-                        </div>
+    <div class="card" id="prepare-result" hidden>
+        <div class="card-body">
+            <h5 class="card-title">Preparation Result</h5>
+            <hr>
+            <form>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Rows Before Clean Up:</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" name="before" value="" readonly>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Rows After Clean Up:</label>
-                        <div class="col-sm-10">
-                            <input class="form-control" name="after" value="{{$rows['after']}}" readonly>
-                        </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Rows After Clean Up:</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" name="after" value="" readonly>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
-    @endif
+    </div>
+    
 @endsection
 

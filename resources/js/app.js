@@ -18,17 +18,17 @@ var Vue = require('vue');
 
 Vue.prototype.$userId = document.querySelector("div[name='current-user-id']").getAttribute('content');
  
-new Vue({
-    el: '#upload-progress',
-    created() {
-        Echo.channel('channel-broadcast').listen('UploadEvent', (e) => {
-            var bar = document.getElementById("upload-progress");
-            bar.setAttribute("aria-valuenow", e.message);
-            bar.setAttribute("style", "width: " + e.message + "%;");
-            bar.innerText = e.message + "%";
-        });
-    },
-});
+// new Vue({
+//     el: '#upload-progress',
+//     created() {
+//         Echo.channel('channel-broadcast').listen('UploadEvent', (e) => {
+//             var bar = document.getElementById("upload-progress");
+//             bar.setAttribute("aria-valuenow", e.message);
+//             bar.setAttribute("style", "width: " + e.message + "%;");
+//             bar.innerText = e.message + "%";
+//         });
+//     },
+// });
 
 new Vue({
     el: '#notification',
@@ -37,8 +37,48 @@ new Vue({
        .notification((notification) => {
            var template = document.getElementById("notification");
            template.removeAttribute("hidden");
+
+           if(template.classList.length > 2) {
+            template.classList.remove("alert-info", "alert-success", "alert-warning", "alert-danger");
+            textToChange.nodeValue = notification.message;
+            } else {
+                template.innerHTML = notification.message + template.innerHTML;
+            }
+
            template.classList.add(notification.alertType);
-           template.innerHTML = notification.message + template.innerHTML;
        });
+
+       Echo.private('Upload.Progress.' + this.$userId).listen('UploadEvent', (e) => {
+            var bar = document.getElementById("upload-progress");
+            bar.setAttribute("aria-valuenow", e.message);
+            bar.setAttribute("style", "width: " + e.message + "%;");
+            bar.innerText = e.message + "%";
+        });
+
+        Echo.private('Count.Broadcast.List.' + this.$userId).listen('CountRowsEvent', (e) => {
+            var notification = document.getElementById("notification");
+            var textToChange = notification.childNodes[0];
+
+            var prepareResult = document.getElementById("prepare-result");
+            var before = document.getElementsByName("before")[0];
+            var after = document.getElementsByName("after")[0];
+
+            notification.removeAttribute("hidden");
+            prepareResult.removeAttribute("hidden");
+
+            if(notification.classList.length > 2) {
+                notification.classList.remove("alert-info", "alert-success", "alert-warning", "alert-danger");
+                textToChange.nodeValue = e.message;
+            } else {
+                notification.innerHTML = e.message + notification.innerHTML;
+            }
+            notification.classList.add(e.alertType);
+            
+            if(e.before === 0) {
+                after.value = e.after;
+            } else {
+                before.value = e.before;
+            }
+        });
     },
 });

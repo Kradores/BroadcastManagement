@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\PrepareListEvent;
 use App\Events\UpdateBroadcastListEvent;
+use App\Listeners\CallForBroadcasting;
+use App\Listeners\CountRowsAfter;
+use App\Listeners\CountRowsBefore;
+use App\Listeners\DeleteDuplicates;
 use App\Listeners\DeleteFileListener;
-use App\Listeners\GeneralNotificationListener;
 use App\Listeners\ListToDbListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -19,6 +23,12 @@ class EventServiceProvider extends ServiceProvider
         UpdateBroadcastListEvent::class => [
             ListToDbListener::class,
             DeleteFileListener::class,
+        ],
+        PrepareListEvent::class => [
+            CountRowsBefore::class,
+            DeleteDuplicates::class,
+            CallForBroadcasting::class,
+            CountRowsAfter::class,
         ],
     ];
 

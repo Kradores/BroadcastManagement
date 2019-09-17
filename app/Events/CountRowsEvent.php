@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,19 +12,25 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class UploadEvent implements ShouldBroadcastNow
+class CountRowsEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message;
+    public $before;
+    public $after;
+    public $userId;
+    public $alert;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($message)
+    public function __construct($userId, array $alert, $before, $after)
     {
-        $this->message = $message;
+        $this->before = $before;
+        $this->after = $after;
+        $this->userId = $userId;
+        $this->alert = $alert;
     }
 
     /**
@@ -33,6 +40,15 @@ class UploadEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('Upload.Progress.'.Auth::user()->id);
+        return new PrivateChannel('Count.Broadcast.List.'.$this->userId);
+    }
+
+    public function broadcastWith() {
+        return [
+            'before' => $this->before,
+            'after' => $this->after,
+            'alertType' => "alert-".$this->alert['type'],
+            'message' => $this->alert['message'],
+        ];
     }
 }

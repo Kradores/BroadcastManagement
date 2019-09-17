@@ -23,7 +23,5 @@ class VerifyCsrfToken extends Middleware
         '/test/*',
         '/upload',
         '/upload/*',
-        '/settings',
-        '/settings/*',
     ];
 }
