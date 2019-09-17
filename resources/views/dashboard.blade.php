@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('header')
-    Broadcast List
+    Broadcaster
 @endsection
 
 @section('content')
