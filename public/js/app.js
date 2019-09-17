@@ -70837,6 +70837,7 @@ new Vue({
   created: function created() {
     Echo["private"]('App.User.' + this.$userId).notification(function (notification) {
       var template = document.getElementById("notification");
+      var textToChange = template.childNodes[0];
       template.removeAttribute("hidden");
 
       if (template.classList.length > 2) {
@@ -70927,8 +70928,10 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "4034098438b13e5fd10b",
-  cluster: "eu",
-  encrypted: false
+  //cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+  wsHost: window.location.hostname,
+  wsPort: 6001,
+  disableStats: true
 });
 
 /***/ }),

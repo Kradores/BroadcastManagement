@@ -36,6 +36,8 @@ new Vue({
        Echo.private('App.User.' + this.$userId)
        .notification((notification) => {
            var template = document.getElementById("notification");
+           var textToChange = template.childNodes[0];
+
            template.removeAttribute("hidden");
 
            if(template.classList.length > 2) {
