@@ -31,7 +31,7 @@
             </a>
         </li>
         <li class="nav-item has-treeview {{Request::is('settings/*') ? 'menu-open' : 'menu-close'}}">
-            <a href="#" class="nav-link active">
+            <a href="#" class="nav-link {{Request::is('settings/*') ? 'active' : ''}}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
                 Settings
